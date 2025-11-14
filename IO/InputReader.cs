@@ -15,7 +15,7 @@ public static class InputReader
             {
                 throw new FileNotFoundException($"Input file not found: {filePath}");
             }
-            return File.ReadAllLines(filePath).ToList();
+            return File.ReadAllLines(filePath).Where(line => !string.IsNullOrWhiteSpace(line)).ToList();
         }
         catch (Exception ex)
         {
