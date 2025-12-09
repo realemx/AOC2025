@@ -2,9 +2,9 @@ namespace AOC.Scaffolding;
 
 public static class InputFetcher
 {
-    public static async Task<string?> FetchInput(int day, AppConfig config)
+    public static async Task<string?> FetchInput(int day, int year, AppConfig config)
     {
-        var url = $"https://adventofcode.com/{config.Year}/day/{day}/input";
+        var url = $"https://adventofcode.com/{year}/day/{day}/input";
 
         using var client = new HttpClient();
         client.DefaultRequestHeaders.Add("Cookie", $"session={config.SessionCookie}");

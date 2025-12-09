@@ -5,14 +5,10 @@ namespace AOC.Scaffolding;
 public class AppConfig
 {
     public string? SessionCookie { get; set; }
-    public int Year { get; set; }
 
     public static AppConfig Load()
     {
-        var config = new AppConfig
-        {
-            Year = DateTime.Now.Month >= 12 ? DateTime.Now.Year : DateTime.Now.Year - 1
-        };
+        var config = new AppConfig { };
 
         var configPath = "config.json";
         if (File.Exists(configPath))
@@ -24,9 +20,6 @@ public class AppConfig
 
                 if (root.TryGetProperty("SessionCookie", out var cookie))
                     config.SessionCookie = cookie.GetString();
-
-                if (root.TryGetProperty("Year", out var year))
-                    config.Year = year.GetInt32();
             }
             catch
             {

@@ -1,6 +1,6 @@
-# Advent of Code 2025 Solver CLI
+# Advent of Code Solver CLI
 
-A command-line tool written in C# to solve [Advent of Code 2025](https://adventofcode.com/2025) puzzles.
+A command-line tool written in C# to solve [Advent of Code](https://adventofcode.com) puzzles for multiple years.
 
 ## Prerequisites
 
@@ -32,8 +32,7 @@ Before running the tool, you need to set up your Advent of Code session cookie t
 The `config.json` file should look like:
 ```json
 {
-    "SessionCookie": "your-session-cookie-here",
-    "Year": 2025
+    "SessionCookie": "your-session-cookie-here"
 }
 ```
 
@@ -41,35 +40,37 @@ The `config.json` file should look like:
 
 ### Run a specific day's solution
 ```bash
-dotnet run solve <day>
+dotnet run solve <day> [--year <year>]
 ```
-Replace `<day>` with the day number (1-25).
+Replace `<day>` with the day number (1-25). The `--year` option specifies the year (defaults to current year).
 
-### Run all available solutions
+### Run all available solutions for a year
 ```bash
-dotnet run run-all
+dotnet run run-all [--year <year>]
 ```
+Runs all solved days for the specified year (defaults to current year).
 
 ### Create a new solver for a day
 ```bash
-dotnet run create <day>
+dotnet run create <day> [--year <year>]
 ```
-This command fetches the input for the day, creates the solver class, and saves the input file.
+This command fetches the input for the day, creates the solver class, and saves the input file. The `--year` option specifies the year (defaults to current year).
 
 ## Project Structure
 
 - `Commands/`: Contains CLI command definitions.
 - `IO/`: Input reading utilities.
 - `Scaffolding/`: Tools for automatically creating new solvers and fetching inputs.
-- `Solvers/`: Contains solver implementations for each day.
+- `Solvers/`: Contains solver implementations organized by year.
+  - `{year}/`: Year-specific solver classes (e.g., `2024/Day1Solver.cs`).
   - `Factories/`: Factory for creating solver instances.
   - `Interfaces/`: Puzzle solver interface definitions.
-- `inputs/`: Input files for each day's puzzle (e.g., `day1.txt`).
-- `config.json`: Configuration file for session cookie and year.
+- `inputs/`: Input files organized by year (e.g., `2024/day1.txt`).
+- `config.json`: Configuration file for session cookie.
 
 ## Contributing
 
-Add new solvers in the `Solvers/` directory implementing the `IPuzzleSolver` interface.
+Add new solvers in the `Solvers/{year}/` directory implementing the `IPuzzleSolver` interface. Use the `create` command to scaffold new solvers automatically.
 
 ## License
 

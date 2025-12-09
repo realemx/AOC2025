@@ -6,9 +6,9 @@ public static class InputReader
 {
     private const string InputDirectory = "./inputs/";
 
-    public static List<string> ReadInput(int day)
+    public static List<string> ReadInput(int day, int year)
     {
-        string filePath = Path.Combine(InputDirectory, $"day{day}.txt");
+        string filePath = Path.Combine(InputDirectory, year.ToString(), $"day{day}.txt");
         try
         {
             if (!File.Exists(filePath))
@@ -19,7 +19,7 @@ public static class InputReader
         }
         catch (Exception ex)
         {
-            throw new Exception($"Error reading input for day {day}: {ex.Message}");
+            throw new Exception($"Error reading input for day {day} in year {year}: {ex.Message}");
         }
     }
 }

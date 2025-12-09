@@ -8,24 +8,26 @@ namespace AOC.Commands;
 public class AocCommands
 {
     [Command("solve")]
-    public static void Solve([Argument] int day)
+    public static void Solve([Argument] int day, [Option] int? year = null)
     {
+        year ??= DateTime.Now.Year;
+
         if (day < 1 || day > 25)
         {
             Console.WriteLine("Error: Day must be between 1 and 25.");
             return;
         }
 
-        var solver = SolverFactory.GetSolver(day);
+        var solver = SolverFactory.GetSolver(day, year.Value);
         if (solver is null)
         {
-            Console.WriteLine($"Error: No solver found for day {day}.");
+            Console.WriteLine($"Error: No solver found for day {day} in year {year}.");
             return;
         }
 
         try
         {
-            var input = InputReader.ReadInput(day);
+            var input = InputReader.ReadInput(day, year.Value);
 
             var part1 = solver.SolvePart1(input);
             Console.WriteLine($"Day {day} Part 1: {part1}");
@@ -52,17 +54,19 @@ public class AocCommands
     }
 
     [Command("run-all")]
-    public static void RunAll()
+    public static void RunAll([Option] int? year = null)
     {
-        var days = SolverFactory.GetAvailableDays();
+        year ??= DateTime.Now.Year;
+
+        var days = SolverFactory.GetAvailableDays(year.Value);
         foreach (var day in days)
         {
-            var solver = SolverFactory.GetSolver(day);
+            var solver = SolverFactory.GetSolver(day, year.Value);
             if (solver != null)
             {
                 try
                 {
-                    var input = InputReader.ReadInput(day);
+                    var input = InputReader.ReadInput(day, year.Value);
                     var part1 = solver.SolvePart1(input);
                     var part2 = solver.SolvePart2(input);
                     Console.WriteLine($"Day {day} Part 1: {part1}");
@@ -77,18 +81,20 @@ public class AocCommands
     }
 
     [Command("create")]
-    public static async Task Create([Argument] int day)
+    public static async Task Create([Argument] int day, [Option] int? year = null)
     {
+        year ??= DateTime.Now.Year;
+
         if (day < 1 || day > 25)
         {
             Console.WriteLine("Error: Day must be between 1 and 25.");
             return;
         }
 
-        var existingSolver = SolverFactory.GetSolver(day);
+        var existingSolver = SolverFactory.GetSolver(day, year.Value);
         if (existingSolver != null)
         {
-            Console.Write("Day {day} already exists. Overwrite? (y/n): ");
+            Console.Write("Day {day} in year {year} already exists. Overwrite? (y/n): ");
             var response = Console.ReadLine();
             if (response?.ToLower() != "y")
             {
@@ -98,6 +104,7 @@ public class AocCommands
         }
 
         var config = AppConfig.Load();
+
         if (string.IsNullOrEmpty(config.SessionCookie))
         {
             Console.WriteLine("Error: Session cookie not found.");
@@ -106,19 +113,21 @@ public class AocCommands
             return;
         }
 
-        var inputContent = await InputFetcher.FetchInput(day, config);
+        var inputContent = await InputFetcher.FetchInput(day, year.Value, config);
         if (inputContent == null)
         {
             return; // Error already printed
         }
 
-        var inputPath = $"inputs/day{day}.txt";
+        var inputDir = Path.Combine("inputs", year.Value.ToString());
+        Directory.CreateDirectory(inputDir);
+        var inputPath = Path.Combine(inputDir, $"day{day}.txt");
         await File.WriteAllTextAsync(inputPath, inputContent);
-        Console.WriteLine($"Fetched and saved input for day {day}.");
+        Console.WriteLine($"Fetched and saved input for day {day} in year {year}.");
 
-        SolverScaffolder.CreateSolver(day);
-        Console.WriteLine($"Created solver class for day {day}.");
+        SolverScaffolder.CreateSolver(day, year.Value);
+        Console.WriteLine($"Created solver class for day {day} in year {year}.");
 
-        Console.WriteLine($"Scaffolded day {day} successfully.");
+        Console.WriteLine($"Scaffolded day {day} in year {year} successfully.");
     }
 }

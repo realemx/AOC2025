@@ -2,14 +2,16 @@ namespace AOC.Scaffolding;
 
 public static class SolverScaffolder
 {
-    public static void CreateSolver(int day)
+    public static void CreateSolver(int day, int year)
     {
         var className = $"Day{day}Solver";
-        var path = $"Solvers/{className}.cs";
+        var dir = $"Solvers/{year}";
+        Directory.CreateDirectory(dir);
+        var path = $"{dir}/{className}.cs";
         var content = $@"
 using AOC.Solvers.Interfaces;
 
-namespace AOC.Solvers
+namespace AOC.Solvers.Y{year}
 {{
     public class {className} : IPuzzleSolver
     {{
